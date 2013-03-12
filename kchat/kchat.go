@@ -9,12 +9,13 @@ import (
   "net/http"
   "time"
   "fmt"
+  //"io/ioutil"
 )
 
 type Message struct {
-  Name  string
-  Body  string 
-  Date  time.Time
+  Name  string     `json:"name"`
+  Body  string     `json:"body"`
+  Date  time.Time  `json:"date"`
 }
 
 func init() {
@@ -23,9 +24,10 @@ func init() {
 }
 
 func root(w http.ResponseWriter, r *http.Request) {
-  var mainTemplate = template.Must(template.ParseFiles("main.html"))
-
-  if err := mainTemplate.Execute(w, map[string] string {}); err != nil {
+  var t = template.Must(template.ParseFiles("/home/dv/Dropbox/code/kchat/kchat/main.html"))
+  var page struct {}
+  
+  if err := t.Execute(w, page); err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
@@ -44,12 +46,22 @@ func chat(w http.ResponseWriter, r *http.Request) {
     }
     
     w.Header().Set("Content-Type", "application/json")
-    fmt.Fprint(w, json.Marshal(messages))
+    payload, _ := json.Marshal(messages)
+    fmt.Fprint(w, string(payload))
     return
   }
  
   if r.Method == "POST" {
+   // payload, _ := ioutil.ReadAll(r.Body)
 
+    msg := Message{
+      Name:  "johan",
+      Body:  "hello",
+      Date:  time.Now(),
+    }
+
+    datastore.Put(context, datastore.NewIncompleteKey(context, "Message", nil), &msg)
+    fmt.Fprintf(w, "ok")
   }
 }
 

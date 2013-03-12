@@ -1,16 +1,17 @@
 <html>
   <head>
-    <script type="text/javascript">
-      
-    </script>
+    <meta charset="utf-8">
+    <title>Chat app built with Google go, Angular.js and Google App Engine</title>
   </head>
 
-  <body> 
-    <div id="chat" style="padding: 10px; background-color: white; width: 100%; height: 85%; overflow: auto;">
+  <body>
+    <div class="main" ng-view>{{ "main page" }}</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+    <script type="text/javascript">
+      var kchat = angular.module('kchat', []);
 
-    <form action="javascript:sendChat();">
-      <div><input name="content" type="text" id="chattext" size="100"></input>
-      <input type="submit" value="Send"></div>
-    </form>
+      kchat.controller('MsgCtrl', function($scope) {
+      });
+    </script>
   </body>
 </html>
