@@ -4,14 +4,32 @@
     <title>Chat app built with Google go, Angular.js and Google App Engine</title>
   </head>
 
-  <body>
-    <div class="main" ng-view>{{ "main page" }}</div>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+  <body ng-app="kchat">
+    <div class="main" ng-controller="MsgCtrl">
+      <li ng-repeat="message in messages">[[ message.name + " says: " + message.body ]]</li> 
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
     <script type="text/javascript">
+      var ROOT_ENDPOINT = 'http://localhost:8080';
+      var CHAT_ENDPOINT = ROOT_ENDPOINT + '/chat';
+      var REFRESH       = 100;
+
       var kchat = angular.module('kchat', []);
 
-      kchat.controller('MsgCtrl', function($scope) {
+      kchat.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
       });
-    </script>
+
+      kchat.controller('MsgCtrl', function MsgCtrl($scope, ChatService) {
+        $scope.messages = ChatService.getMessages();  
+      });
+
+      kchat.service('ChatService', function($http) {
+        this.getMessages = function() {
+           console.debug("called");
+        };
+      });
+   </script>
   </body>
 </html>
