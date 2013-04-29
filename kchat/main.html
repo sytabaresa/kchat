@@ -1,13 +1,18 @@
-<html>
+<html ng-app="kchat">
   <head>
     <meta charset="utf-8">
     <title>Chat app built with Google go, Angular.js and Google App Engine</title>
+    <style>
+
+    </style>
   </head>
 
-  <body ng-app="kchat">
-    <div class="main" ng-controller="MsgCtrl">
-      <li ng-repeat="message in messages">[[ message.name + " says: " + message.body ]]</li> 
-    </div>
+  <body ng-controller="MsgCtrl">
+    <pre id="chat"></pre>
+    <form>
+      <input id="msg" placeholder="type message here..." ng-model="msg"/>
+    </form>
+
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
     <script type="text/javascript">
       var ROOT_ENDPOINT = 'http://localhost:8080';
@@ -21,14 +26,10 @@
         $interpolateProvider.endSymbol(']]');
       });
 
-      kchat.controller('MsgCtrl', function MsgCtrl($scope, ChatService) {
-        $scope.messages = ChatService.getMessages();  
-      });
-
-      kchat.service('ChatService', function($http) {
-        this.getMessages = function() {
-           console.debug("called");
-        };
+      kchat.controller('MsgCtrl', function MsgCtrl($scope, $http) {
+        $http.get(CHAT_ENDPOINT).then(function(response) {
+          $scope.messages = response.data;
+        });
       });
    </script>
   </body>
